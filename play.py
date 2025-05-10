@@ -12,15 +12,16 @@ NANO_TO_SEC = 1000000000
 
 # UI
 board_height = 480
-extra_height = 60
+extra_height = 150
 width = 480
-# size = width, height = 480, 700
+# size = width, height = 480, 800
 screen = pygame.display.set_mode((width, board_height + extra_height))
 pygame.display.set_caption('{} Puzzle'.format(BOARD_SIZE**2-1))
 FPS = 30
 
 # Fonts
 tileFont = pygame.font.SysFont("", 72)
+
 
 # Colors
 white = (254,254,254)
@@ -42,6 +43,8 @@ def gameLoop():
     global aiMoves
     global autoSolve
     global speed
+    global status_dot_timer 
+    global status_dot_index
     
     clock = pygame.time.Clock()
 
@@ -96,7 +99,9 @@ def handleInput(event, puzzle):
         
         elif event.key == pygame.K_h:
             if len(aiMoves) == 0:
-                print("Solving...")              
+                print("Solving...")
+                     
+                     
                 aiMoves = ai.idaStar(puzzle)               
                 aiMoveIndex = 0
 
@@ -110,16 +115,22 @@ def handleInput(event, puzzle):
         # shuffle button
         reset_btn_rect = pygame.Rect(20, board_height + 10, 120, 40)
         if reset_btn_rect.collidepoint(pos):
+            ai.status_msg = ""
+            
             puzzle.shuffle()
             aiMoveIndex = 0
             aiMoves = []
             autoSolve = False
             
-        # Auto Solve
+        # Solve Button
         solve_btn_rect = pygame.Rect((width - 120) // 2, board_height + 10, 120, 40)
         if solve_btn_rect.collidepoint(pos):
             if len(aiMoves) == 0:
+                ai.status_msg = "Searching for the shortest sequence of moves..."               
                 print("Solving...")
+                drawPuzzle(puzzle) 
+                pygame.display.flip() 
+                
                 aiMoves = ai.idaStar(puzzle)
                 aiMoveIndex = 0
             if len(aiMoves) > 0:
@@ -151,6 +162,7 @@ def handleInput(event, puzzle):
 
 
 def drawPuzzle(puzzle):
+    
     screen.fill(black)
 
     for i in range(puzzle.boardSize):
@@ -190,7 +202,7 @@ def drawPuzzle(puzzle):
         btn_rect.y + (btn_rect.height - btn_text.get_height()) // 2
     ))
     
-    # Reset button
+    # Shuffle button
     reset_btn_rect = pygame.Rect(20, board_height + 10, 120, 40)
     reset_btn_color = (200, 200, 200) if reset_btn_rect.collidepoint(pygame.mouse.get_pos()) else (230, 230, 230)
     pygame.draw.rect(screen, reset_btn_color, reset_btn_rect)
@@ -215,6 +227,21 @@ def drawPuzzle(puzzle):
         solve_btn_rect.x + (solve_btn_rect.width - solve_btn_text.get_width()) // 2,
         solve_btn_rect.y + (solve_btn_rect.height - solve_btn_text.get_height()) // 2
     ))
+    
+    # Display Messenger
+    
+    
+    # status_font = pygame.font.SysFont("", 24)
+    # status_text = status_font.render(ai.status_msg, True, white)
+    # screen.blit(status_text, (20, board_height + extra_height - 25))  
+    
+    status_font = pygame.font.SysFont("Segoe UI", 18, bold=True)
+    lines = ai.status_msg.strip().split('\n')
+    for i, line in enumerate(lines):
+        text_surface = status_font.render(line, True, white)
+        screen.blit(text_surface, (20, board_height + 55 + i * 22))  
+    
+   
 
 
 if __name__ =="__main__":

@@ -8,7 +8,8 @@ groups = []
 patternDbDict = []
 
 # Display messenger
-status_msg = "Initializing pattern DB..."
+#status_msg = "Initializing pattern DB..."
+status_msg = ""
  
 
 
@@ -24,8 +25,8 @@ def init(boardSize):
         for i in range(len(patternDbDict)):
             print("Group {}: {}, {:,} entries.".format(i,groups[i],len(patternDbDict[i])))
             
-            line = f"Group {i}: {groups[i]}, {len(patternDbDict[i]):,} entries"          
-            status_msg += "\n" + line
+            # line = f"Group {i}: {groups[i]}, {len(patternDbDict[i]):,} entries"          
+            # status_msg += "\n" + line
             
 def idaStar(puzzle):
     global status_msg

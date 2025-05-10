@@ -228,18 +228,16 @@ def drawPuzzle(puzzle):
         solve_btn_rect.y + (solve_btn_rect.height - solve_btn_text.get_height()) // 2
     ))
     
-    # Display Messenger
-    
-    
-    # status_font = pygame.font.SysFont("", 24)
-    # status_text = status_font.render(ai.status_msg, True, white)
-    # screen.blit(status_text, (20, board_height + extra_height - 25))  
-    
+    # Display Messages 
     status_font = pygame.font.SysFont("Segoe UI", 18, bold=True)
-    lines = ai.status_msg.strip().split('\n')
-    for i, line in enumerate(lines):
-        text_surface = status_font.render(line, True, white)
-        screen.blit(text_surface, (20, board_height + 55 + i * 22))  
+    status_text = status_font.render(ai.status_msg, True, white)
+    screen.blit(status_text, (20, board_height + extra_height - 80))  
+    
+    # status_font = pygame.font.SysFont("Segoe UI", 18, bold=True)
+    # lines = ai.status_msg.strip().split('\n')
+    # for i, line in enumerate(lines):
+    #     text_surface = status_font.render(line, True, white)
+    #     screen.blit(text_surface, (20, board_height + 55 + i * 22))  
     
    
 

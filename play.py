@@ -178,6 +178,7 @@ def handleInput(event, puzzle):
             subprocess.Popen(["python", "puzzle_game.py"])
             sys.exit()
             
+            
         # Switch Display mode button
         toggle_btn_rect = pygame.Rect(20, board_height + 60, 200, 40)
         if toggle_btn_rect.collidepoint(pos):

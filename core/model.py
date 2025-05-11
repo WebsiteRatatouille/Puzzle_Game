@@ -1,7 +1,8 @@
 from random import choice
 from copy import deepcopy
-class Puzzle:
 
+
+class Puzzle:
     UP = (1,0)
     DOWN = (-1,0)
     LEFT = (0,1)

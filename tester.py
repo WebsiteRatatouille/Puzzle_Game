@@ -1,4 +1,4 @@
-import model
+from core import model
 
 puzzle = model.Puzzle()
 print("initial state")

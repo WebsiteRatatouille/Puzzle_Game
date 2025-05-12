@@ -1,6 +1,6 @@
 import pygame
 import sys
-from core import ai
+from core import IDAstar
 from core import model
 import slice_image
 import time
@@ -38,7 +38,7 @@ tileColor = white
 fontColor = black
 
 # ai
-ai.init(BOARD_SIZE)
+IDAstar.init(BOARD_SIZE)
 aiMoveIndex = 0
 aiMoves = []
 
@@ -111,7 +111,7 @@ def handleInput(event, puzzle):
         elif event.key == pygame.K_h:
             if len(aiMoves) == 0:
                 print("Solving...")
-                aiMoves = ai.idaStar(puzzle)
+                aiMoves = IDAstar.idaStar(puzzle)
                 aiMoveIndex = 0
 
             if len(aiMoves) != 0:
@@ -132,7 +132,7 @@ def handleInput(event, puzzle):
         # shuffle button
         reset_btn_rect = pygame.Rect(20, board_height + 10, 90, 40)
         if reset_btn_rect.collidepoint(pos):
-            ai.status_msg = ""
+            IDAstar.status_msg = ""
             
             puzzle.shuffle()
             aiMoveIndex = 0
@@ -143,12 +143,12 @@ def handleInput(event, puzzle):
         solve_btn_rect = pygame.Rect(120, board_height + 10, 100, 40)
         if solve_btn_rect.collidepoint(pos):
             if len(aiMoves) == 0:
-                ai.status_msg = "Searching for the shortest sequence of moves..."               
+                IDAstar.status_msg = "Searching for the shortest sequence of moves..."               
                 print("Solving...")
                 drawPuzzle(puzzle) 
                 pygame.display.flip() 
                             
-                aiMoves = ai.idaStar(puzzle)
+                aiMoves = IDAstar.idaStar(puzzle)
                 aiMoveIndex = 0
                 
             if len(aiMoves) != 0:
@@ -193,7 +193,7 @@ def handleInput(event, puzzle):
         # Changing image
         example_rect = pygame.Rect(width - 40 - 150, board_height + extra_height - 40 - 150, 150, 150)
         if example_rect.collidepoint(pos):
-            tk.Tk().withdraw()  #hide window tk
+            tk.Tk().withdraw()  
             file_path = filedialog.askopenfilename(
                 
                 filetypes=[("Image Files", "*.png *.jpg *.jpeg *.bmp")]
@@ -323,7 +323,7 @@ def drawPuzzle(puzzle):
     
     # Display Messages 
     status_font = pygame.font.SysFont("Segoe UI", 18, bold=True)
-    status_text = status_font.render(ai.status_msg, True, white)
+    status_text = status_font.render(IDAstar.status_msg, True, white)
     screen.blit(status_text, (20, board_height + extra_height - 30))  
     
    

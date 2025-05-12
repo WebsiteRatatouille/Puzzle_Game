@@ -19,6 +19,7 @@ def slice_image(image_path, output_folder, rows=4, cols=4):
     count = 1
     for row in range(rows):
         for col in range(cols):
+            #toa do cut
             left = col * tile_width
             top = row * tile_height
             right = left + tile_width

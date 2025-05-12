@@ -65,11 +65,11 @@ class Puzzle:
 
         return True
 
+    # tao chuoi hashString vi tri cai tile
     def hash(self, group = {}):
         if not group:
             group = {s for s in range(self.boardSize**2)}
-
-        hashString = ['0']*2*(self.boardSize**2)
+        hashString = ['0']*2*(self.boardSize**2) # full [ 0,0,0,0....]
 
         for i in range(self.boardSize):
             for j in range(self.boardSize):
@@ -80,7 +80,8 @@ class Puzzle:
                     hashString[2*self[i][j]] = 'x'
                     hashString[2*self[i][j]+1] = 'x'
 
-        return ''.join(hashString).replace('x','')
+        return ''.join(hashString).replace('x','') #{12000103}
+    
     def simulateMove(self, dir):
         simPuzzle = deepcopy(self)
 

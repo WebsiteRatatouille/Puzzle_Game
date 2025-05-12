@@ -3,7 +3,7 @@ import pickle
 from time import perf_counter_ns
 
 NANO_TO_SEC = 1000000000
-INF = 100000
+INF = 100000 # Dung trong Search neu ko tim duoc loi giai
 groups = []
 patternDbDict = []
 
@@ -22,6 +22,7 @@ def init(boardSize):
     with open("datas/patternDb_"+str(boardSize)+".dat", "rb") as patternDbFile:
         groups = pickle.load(patternDbFile)
         patternDbDict = pickle.load(patternDbFile)
+        
         for i in range(len(patternDbDict)):
             print("Group {}: {}, {:,} entries.".format(i,groups[i],len(patternDbDict[i])))
             
@@ -37,8 +38,10 @@ def idaStar(puzzle):
         init(puzzle.boardSize)
 
     t1 = perf_counter_ns()
+    # gioi han chi phi toi da 
+    # f <= bound
     bound = hScore(puzzle)
-    path = [puzzle]
+    path = [puzzle] # danh sach da duyet trang thai
     dirs = []
     while True:
         rem = search(path, 0, bound, dirs)
@@ -51,6 +54,9 @@ def idaStar(puzzle):
             status_msg = "No solution found"
             return None
         bound = rem
+        
+        
+# Find solution dua tren bound, g so buoc da di ban dau -> hien tai
 def search(path, g, bound, dirs):
     cur = path[-1]
     f = g + hScore(cur)
@@ -60,9 +66,10 @@ def search(path, g, bound, dirs):
 
     if cur.checkWin():
         return True
-    min = INF
+    min = INF 
 
     for dir in cur.DIRECTIONS:
+        # huong vua di chuyen = ignore
         if dirs and (-dir[0], -dir[1]) == dirs[-1]:
             continue
         validMove, simPuzzle = cur.simulateMove(dir)
@@ -73,7 +80,9 @@ def search(path, g, bound, dirs):
         path.append(simPuzzle)
         dirs.append(dir)
 
-        t = search(path, g + 1, bound, dirs)
+        t = search(path, g + 1, bound, dirs) # de quy
+        
+        # tim duoc loi giai?
         if t == True:
             return True
         if t < min:
@@ -86,20 +95,24 @@ def search(path, g, bound, dirs):
 
 def hScore(puzzle):
     global status_msg
+    # khoi tai heuristic
     h = 0
     for g in range(len(groups)):
         group = groups[g]
-        hashString = puzzle.hash(group)
+        hashString = puzzle.hash(group) 
+        
         if hashString in patternDbDict[g]:
             h += patternDbDict[g][hashString]
         else:
-            #print("No pattern found in DB, using manhattan dist")
-            status_msg = "No pattern found in DB, fallback to Manhattan"
+            
+            status_msg = "not found in DB useManhattan"
             for i in range(puzzle.boardSize):
                 for j in range(puzzle.boardSize):
                     if puzzle[i][j] != 0 and puzzle[i][j] in group:
+                        #tìm vị tri goal                     
                         destPos = ((puzzle[i][j] - 1) // puzzle.boardSize,
                                      (puzzle[i][j] - 1) % puzzle.boardSize)
+                        # khoang cach manhattan (hien tai -> goal)
                         h += abs(destPos[0] - i)
                         h += abs(destPos[1] - j)
 

@@ -17,15 +17,18 @@ def nPr(n,r):
     return math.floor(fact(n)/fact(n-r))
 
 def buildPatternDb(boardSize, group, groupNum):
+    # tao puzzle trang thai ban dau
     puzzle = model.Puzzle(boardSize, shuffle = False)
     puzzle.count = 0
 
-    groupWithBlank = group.copy()
-    groupWithBlank.add(0)
 
-    visited = set() # Permutations of group tile + blank tile locations visited
-    closedList = {} # Permutation of group tile locations with min move count so far
-    openList = deque() # Next permutations to visit
+    groupWithBlank = group.copy()
+    groupWithBlank.add(0)  # them tile 0 -> {0, 1, 2}
+
+    visited = set() 
+    closedList = {} 
+    openList = deque() 
+    
     iter = 0
     totIter = nPr(boardSize**2, len(groupWithBlank))
     t1 = perf_counter_ns()
@@ -34,21 +37,23 @@ def buildPatternDb(boardSize, group, groupNum):
     #(puzzle, prior direction)
     openList.append((puzzle,(0,0)))
 
+
     while openList:
         cur, prevMove = openList.popleft()
 
+        # DA DUYET = BO QUA
         if not visitNode(cur,
                         visited,
                         closedList,
                         groupWithBlank,
                         group):
             continue
+        
         for dir in puzzle.DIRECTIONS:
-            if dir == prevMove:
+            if dir == prevMove: # HUONG LAP LAI
                 continue
 
             validMove, simPuzzle = cur.simulateMove(dir)
-
             if not validMove:
                 continue
 
@@ -57,6 +62,7 @@ def buildPatternDb(boardSize, group, groupNum):
 
             openList.append((simPuzzle, (-dir[0],-dir[1])))
         iter += 1
+
 
         if iter % 100000 == 0:
             t2 = perf_counter_ns()
@@ -68,27 +74,34 @@ def buildPatternDb(boardSize, group, groupNum):
 
     return closedList
 
-
+# note lai trang trai moi va cap nhap min so buoc
 def visitNode(puzzle, visited, closedList, groupWithBlank, group):
-    puzzleHashWithBlank = puzzle.hash(groupWithBlank)
+    puzzleHashWithBlank = puzzle.hash(groupWithBlank) #1-2-3-4-0-7
+    # da xuat hien, da tham
     if puzzleHashWithBlank in visited:
         return False
 
     visited.add(puzzleHashWithBlank)
 
-    groupHash = puzzle.hash(group)
+    
+    groupHash = puzzle.hash(group)  
     if groupHash not in closedList:
         closedList[groupHash] = puzzle.count
+        
+    # so buoc hien tai it hon
     elif closedList[groupHash] > puzzle.count:
         closedList[groupHash] = puzzle.count
 
     return True
 
 def main():
-    boardSize = 5
     
     
-    groups = [{1,2,3,4,5},{6,7,8,9,10},{11,12,13,14,15},{16,17,18,19,20},{21,22,23,24}]
+    boardSize = 4
+    groups = [{1, 2, 3, 4, 7},{5, 6, 9, 10, 13},{8, 11, 12, 14, 15}]
+    
+    # boardSize = 5
+    # groups = [{1,2,3,4,5},{6,7,8,9,10},{11,12,13,14,15},{16,17,18,19,20},{21,22,23,24}]
     
   
     closedList = []

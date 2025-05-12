@@ -1,8 +1,8 @@
-Yêu cầu cài đặt thư viện
+File chính để chạy: "puzzle_game.py"
 
-pip install -r requirements.txt
+Yêu cầu về cài đặt thư viện: "pip install -r requirements.txt"
 
-hoặc 
-pip install pygame
-pip install numpy
-pip install Pillow
+hoặc
+"pip install pygame" /
+"pip install numpy" /
+"pip install Pillow"
